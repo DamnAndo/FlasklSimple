@@ -151,3 +151,4 @@ Project ini siap untuk:
 - File `data_peserta.json` akan otomatis dibuat saat pertama kali data diinput
 - Aplikasi berjalan dalam mode debug untuk development
 - Tidak ada database eksternal yang diperlukan
+# CI/CD Test - Mon Jun  1 18:19:37 WIB 2026
