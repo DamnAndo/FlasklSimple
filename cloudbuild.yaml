@@ -25,3 +25,6 @@ steps:
 
 images:
   - 'us-central1-docker.pkg.dev/project-f07f5ebd-d4bf-46f3-85f/flask-repo/flask-simple-app:$BUILD_ID'
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
