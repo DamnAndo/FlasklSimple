@@ -1,6 +1,10 @@
 # Final Project - Fase 1: Aplikasi Flask Sederhana
 
+![Cloud Build](https://badgen.net/badge/CI/CD/Cloud%20Build/blue?icon=github)
+
 Aplikasi web sederhana menggunakan Flask untuk form input data nama dan alamat yang disimpan ke file JSON.
+
+**Last CI/CD Test:** June 2026 ✅
 
 ## Deskripsi
 
