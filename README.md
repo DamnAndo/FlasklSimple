@@ -1,8 +1,12 @@
 # Final Project - Fase 1: Aplikasi Flask Sederhana
 
 ![Cloud Build](https://badgen.net/badge/CI/CD/Cloud%20Build/blue?icon=github)
+![Prometheus](https://badgen.net/badge/Monitoring/Prometheus/orange)
+![Grafana](https://badgen.net/badge/Dashboard/Grafana/yellow)
 
 Aplikasi web sederhana menggunakan Flask untuk form input data nama dan alamat yang disimpan ke file JSON.
+
+✅ **Dilengkapi Monitoring:** Prometheus + Grafana untuk metrics dan dashboard monitoring.
 
 **Last CI/CD Test:** June 2026 ✅
 
@@ -62,6 +66,38 @@ docker-compose down
 docker-compose logs -f
 ```
 
+### Opsi 3: Dengan Monitoring Stack (Prometheus + Grafana) 🔥
+
+Jalankan stack lengkap dengan monitoring:
+
+```bash
+# Start semua services (Flask, Prometheus, Grafana)
+docker-compose up -d --build
+
+# Cek status containers
+docker-compose ps
+```
+
+**Akses Services:**
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Flask App** | http://localhost:5001 | Aplikasi utama |
+| **Prometheus** | http://localhost:9090 | Metrics collection |
+| **Grafana** | http://localhost:3000 | Dashboard visualization |
+
+**Grafana Login:**
+- Username: `admin`
+- Password: `admin123`
+
+**Metrics yang Tersedia:**
+- `app_request_count` - Total HTTP requests
+- `app_request_latency_seconds` - Request response time
+- `app_submit_count` - Total form submissions
+- `app_data_entries_total` - Total data entries
+
+**Prometheus Endpoint:** http://localhost:5001/metrics
+
 ## Cara Penggunaan
 
 1. Buka browser dan akses `http://127.0.0.1:5001` (atau `http://localhost:5001` untuk Docker)
@@ -74,23 +110,34 @@ docker-compose logs -f
 
 ```
 FlasklSimple/
-├── app.py                 # File utama aplikasi Flask
-├── requirements.txt       # Dependencies Python
-├── Dockerfile            # Konfigurasi Docker container
-├── docker-compose.yml    # Konfigurasi Docker Compose
-├── README.md             # Dokumentasi project
-├── data/                 # Folder data (untuk Docker volume)
-└── data_peserta.json     # File database (auto-generated)
+├── app.py                          # File utama aplikasi Flask + Prometheus metrics
+├── requirements.txt                # Dependencies Python
+├── Dockerfile                     # Konfigurasi Docker container
+├── docker-compose.yml             # Konfigurasi Docker Compose + Monitoring
+├── README.md                      # Dokumentasi project
+├── prometheus.yml                 # Konfigurasi Prometheus
+├── grafana/                       # Grafana configuration
+│   ├── provisioning/
+│   │   ├── datasources/
+│   │   │   └── prometheus.yml    # Auto-config Prometheus datasource
+│   │   └── dashboards/
+│   │       └── dashboard.yml     # Auto-config dashboards
+│   └── dashboards/
+│       └── flask-dashboard.json  # Dashboard Flask App
+├── data/                          # Folder data (untuk Docker volume)
+└── data_peserta.json             # File database (auto-generated)
 ```
 
 ## Fitur Teknis
 
-- **Framework**: Flask 2.3.3
+- **Framework**: Flask 2.3.3 + Prometheus Client
 - **Storage**: File JSON
 - **Template**: HTML dengan CSS inline (single-file approach)
-- **Port**: 5001
+- **Port**: 5001 (Flask), 9090 (Prometheus), 3000 (Grafana)
 - **Host**: 0.0.0.0 (accessible dari network)
 - **Containerization**: Docker support
+- **Monitoring**: Prometheus + Grafana stack
+- **Metrics**: Request count, latency, form submissions, data entries
 
 ## 🌍 Live Deployment
 

@@ -1,0 +1,63 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Flask App Monitoring",
+    "tags": ["flask", "prometheus"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 1,
+    "refresh": "10s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Request Count",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "app_request_count_total",
+            "legendFormat": "{{method}} {{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Request Latency (seconds)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(app_request_latency_seconds_sum[5m]) / rate(app_request_latency_seconds_count[5m])",
+            "legendFormat": "{{method}} {{endpoint}}",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Form Submissions",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "app_submit_count_total",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "Data Entries",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "app_data_entries_total",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      }
+    ]
+  }
+}

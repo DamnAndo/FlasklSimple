@@ -1,8 +1,15 @@
 import os
 import json
-from flask import Flask, render_template_string, request, redirect, url_for
+from flask import Flask, render_template_string, request, redirect, url_for, Response
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
 app = Flask(__name__)
+
+# Prometheus Metrics
+REQUEST_COUNT = Counter('app_request_count', 'Total App Requests', ['method', 'endpoint', 'status'])
+REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request Latency', ['method', 'endpoint'])
+SUBMIT_COUNT = Counter('app_submit_count', 'Total Form Submissions')
+DATA_COUNT = Counter('app_data_entries_total', 'Total Data Entries in JSON')
 
 # Tentukan nama file JSON untuk menyimpan data
 DATA_FILE = 'data_peserta.json'
@@ -145,6 +152,9 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    # Track form submission
+    SUBMIT_COUNT.inc()
+    
     # Ambil data dari form
     nama = request.form.get('nama')
     alamat = request.form.get('alamat')
@@ -156,8 +166,31 @@ def submit():
             'alamat': alamat
         }
         save_data(new_entry)
+        # Track data count
+        DATA_COUNT.inc()
         
     return redirect(url_for('index'))
+
+@app.route('/metrics')
+def metrics():
+    """Endpoint untuk Prometheus metrics"""
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
+
+@app.before_request
+def before_request():
+    """Track request start time"""
+    from time import time
+    request.start_time = time()
+
+@app.after_request
+def after_request(response):
+    """Track request metrics"""
+    from time import time
+    if hasattr(request, 'start_time'):
+        latency = time() - request.start_time
+        REQUEST_LATENCY.labels(request.method, request.endpoint).observe(latency)
+    REQUEST_COUNT.labels(request.method, request.endpoint, response.status_code).inc()
+    return response
 
 if __name__ == '__main__':
     # Aplikasi berjalan di mode debug pada port 5000
