@@ -1,0 +1,27 @@
+steps:
+  # Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/project-f07f5ebd-d4bf-46f3-85f/flask-repo/flask-simple-app:$BUILD_ID', '.']
+  
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/project-f07f5ebd-d4bf-46f3-85f/flask-repo/flask-simple-app:$BUILD_ID']
+  
+  # Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'flask-simple-app'
+      - '--image'
+      - 'us-central1-docker.pkg.dev/project-f07f5ebd-d4bf-46f3-85f/flask-repo/flask-simple-app:$BUILD_ID'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '5001'
+
+images:
+  - 'us-central1-docker.pkg.dev/project-f07f5ebd-d4bf-46f3-85f/flask-repo/flask-simple-app:$BUILD_ID'

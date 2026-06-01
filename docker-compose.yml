@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  flask-app:
+    build: .
+    ports:
+      - "5001:5001"  # Mapping port host:container
+    volumes:
+      - ./data:/app/data  # Persist data folder
+      - ./data_peserta.json:/app/data_peserta.json  # Persist JSON file
+    environment:
+      - FLASK_ENV=production
+    restart: unless-stopped
+    container_name: flask-simple-app
